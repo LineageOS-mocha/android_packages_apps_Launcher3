@@ -57,6 +57,9 @@ public class Hotseat extends FrameLayout
     private ColorDrawable mBackground;
     private ValueAnimator mBackgroundColorAnimator;
 
+    private final String KEY_TRANSPARENT_HOTSEAT = "pref_TransparentHotseat";
+    private boolean mTransparentHotseat;
+
     public Hotseat(Context context) {
         this(context, null);
     }
@@ -180,7 +183,13 @@ public class Hotseat extends FrameLayout
 
     public void updateColor(ExtractedColors extractedColors, boolean animate) {
         if (!mHasVerticalHotseat) {
-            int color = extractedColors.getColor(ExtractedColors.HOTSEAT_INDEX, Color.TRANSPARENT);
+            int color = 0;
+            mTransparentHotseat = Utilities.getPrefs(mLauncher.getApplicationContext()).getBoolean(KEY_TRANSPARENT_HOTSEAT, false);
+            if (mTransparentHotseat) {
+                color = extractedColors.getColor(0, Color.TRANSPARENT);
+            } else {
+                color = extractedColors.getColor(ExtractedColors.HOTSEAT_INDEX, Color.TRANSPARENT);
+            }
             if (mBackgroundColorAnimator != null) {
                 mBackgroundColorAnimator.cancel();
             }
@@ -208,7 +217,10 @@ public class Hotseat extends FrameLayout
     }
 
     public void setBackgroundTransparent(boolean enable) {
+        mTransparentHotseat = Utilities.getPrefs(mLauncher.getApplicationContext()).getBoolean(KEY_TRANSPARENT_HOTSEAT, false);
         if (enable) {
+            mBackground.setAlpha(0);
+        } else if (mTransparentHotseat) {
             mBackground.setAlpha(0);
         } else {
             mBackground.setAlpha(255);

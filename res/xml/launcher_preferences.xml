@@ -44,4 +44,11 @@
             android:persistent="true"
     />
 
+    <SwitchPreference
+            android:key="pref_TransparentHotseat"
+            android:title="@string/transparent_hotseat_title"
+            android:defaultValue="false"
+            android:persistent="true"
+    />
+
 </PreferenceScreen>

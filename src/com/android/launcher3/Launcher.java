@@ -4545,6 +4545,9 @@ public class Launcher extends Activity
                 mModel.resetLoadedState(true, true);
                 mOnResumeNeedsLoad = true;
             }
+            if ("pref_TransparentHotseat".equals(key)) {
+                loadExtractedColorsAndColorItems();
+            }
         }
 
         @Override
