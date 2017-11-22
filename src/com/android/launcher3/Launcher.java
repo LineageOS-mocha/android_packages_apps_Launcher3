@@ -395,7 +395,7 @@ public class Launcher extends Activity
         }
 
         mContext = getApplicationContext();
-        mShowPredictiveApps = Utilities.getPrefs(mContext).getBoolean(KEY_ENABLE_PREDICTIVE_APPS, true);
+        mShowPredictiveApps = Utilities.getPrefs(mContext).getBoolean(KEY_ENABLE_PREDICTIVE_APPS, false);
         if (mShowPredictiveApps) {
              mPredictiveAppsProvider = new PredictiveAppsProvider(mContext);
         }
