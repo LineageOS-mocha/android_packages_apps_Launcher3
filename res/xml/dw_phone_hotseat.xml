@@ -25,6 +25,13 @@
         <favorite launcher:uri="#Intent;action=android.intent.action.DIAL;end" />
         <favorite launcher:uri="tel:123" />
         <favorite launcher:uri="#Intent;action=android.intent.action.CALL_BUTTON;end" />
+
+        <favorite
+            launcher:packageName="com.android.dialer"
+            launcher:className="com.android.dialer.DialtactsActivity" />
+        <favorite
+            launcher:packageName="com.android.contacts"
+            launcher:className="com.android.contacts.activities.PeopleActivity" />
     </resolve>
 
     <resolve
@@ -32,14 +39,23 @@
         launcher:screen="1"
         launcher:x="1"
         launcher:y="0" >
-        <favorite launcher:uri="#Intent;action=android.intent.action.MAIN;category=android.intent.category.APP_MESSAGING;end" />
-        <favorite launcher:uri="sms:" />
-        <favorite launcher:uri="smsto:" />
-        <favorite launcher:uri="mms:" />
-        <favorite launcher:uri="mmsto:" />
+        <favorite
+            launcher:packageName="com.android.messaging"
+            launcher:className="com.android.messaging.ui.conversationlist.ConversationListActivity" />
+        <favorite
+            launcher:packageName="com.android.email"
+            launcher:className="com.android.email.activity.Welcome" />
     </resolve>
 
-    <!-- All Apps -->
+    <resolve
+        launcher:container="-101"
+        launcher:screen="2"
+        launcher:x="2"
+        launcher:y="0" >
+        <favorite
+            launcher:packageName="com.cyanogenmod.eleven"
+            launcher:className="com.cyanogenmod.eleven.ui.activities.HomeActivity" />
+    </resolve>
 
     <resolve
         launcher:container="-101"
@@ -47,8 +63,20 @@
         launcher:x="3"
         launcher:y="0" >
         <favorite
-            launcher:uri="#Intent;action=android.intent.action.MAIN;category=android.intent.category.APP_BROWSER;end" />
-        <favorite launcher:uri="http://www.example.com/" />
+            launcher:packageName="org.cyanogenmod.gello.browser"
+            launcher:className="com.android.browser.BrowserActivity" />
+        <favorite
+            launcher:packageName="com.android.browser"
+            launcher:className="com.android.browser.BrowserActivity" />
+        <favorite
+            launcher:packageName="com.cyngn.browser"
+            launcher:className="com.android.browser.BrowserLauncher" />
+        <favorite
+            launcher:packageName="com.android.chrome"
+            launcher:className="com.google.android.apps.chrome.Main" />
+        <favorite
+            launcher:packageName="org.lineageos.jelly"
+            launcher:className="org.lineageos.jelly.MainActivity" />
     </resolve>
 
     <resolve
@@ -56,8 +84,15 @@
         launcher:screen="4"
         launcher:x="4"
         launcher:y="0" >
-        <favorite launcher:uri="#Intent;action=android.media.action.STILL_IMAGE_CAMERA;end" />
-        <favorite launcher:uri="#Intent;action=android.intent.action.CAMERA_BUTTON;end" />
+        <favorite
+            launcher:packageName="com.cyngn.cameranext"
+            launcher:className="com.android.camera.CameraLauncher" />
+        <favorite
+            launcher:packageName="org.cyanogenmod.snap"
+            launcher:className="com.android.camera.CameraLauncher" />
+        <favorite
+            launcher:packageName="com.android.camera2"
+            launcher:className="com.android.camera.CameraLauncher" />
     </resolve>
 
 </favorites>
