@@ -47,7 +47,7 @@
     <SwitchPreference
             android:key="pref_TransparentHotseat"
             android:title="@string/transparent_hotseat_title"
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:persistent="true"
     />
 

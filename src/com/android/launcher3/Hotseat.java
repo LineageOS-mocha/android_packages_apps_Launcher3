@@ -184,7 +184,7 @@ public class Hotseat extends FrameLayout
     public void updateColor(ExtractedColors extractedColors, boolean animate) {
         if (!mHasVerticalHotseat) {
             int color = 0;
-            mTransparentHotseat = Utilities.getPrefs(mLauncher.getApplicationContext()).getBoolean(KEY_TRANSPARENT_HOTSEAT, false);
+            mTransparentHotseat = Utilities.getPrefs(mLauncher.getApplicationContext()).getBoolean(KEY_TRANSPARENT_HOTSEAT, true);
             if (mTransparentHotseat) {
                 color = extractedColors.getColor(0, Color.TRANSPARENT);
             } else {
