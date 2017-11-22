@@ -33,7 +33,7 @@
     <SwitchPreference
             android:key="pref_searchBar"
             android:title="@string/search_bar_title"
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:persistent="true"
         />
 
