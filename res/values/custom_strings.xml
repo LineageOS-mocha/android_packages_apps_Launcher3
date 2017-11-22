@@ -25,4 +25,5 @@
     <string name="default_iconpack_title">Default icons</string>
     <string name="transparent_hotseat_title">Transparent Hotseat</string>
     <string name="swipe_down_title">Swipe down to expand quick settings</string>
+    <string name="double_tap_title">Double tap to sleep</string>
 </resources>

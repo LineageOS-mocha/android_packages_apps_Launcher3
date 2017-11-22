@@ -42,6 +42,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Parcelable;
+import android.os.PowerManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Property;
@@ -115,6 +116,7 @@ public class Workspace extends PagedView
     private static final int SWIPE_THRESHOLD = 125;
 
     private final String KEY_SWIPE_DOWN = "pref_SwipeDown";
+    private final String KEY_DOUBLE_TAP = "pref_DoubleTap";
 
     // The screen id used for the empty screen always present to the right.
     public static final long EXTRA_EMPTY_SCREEN_ID = -201;
@@ -326,6 +328,7 @@ public class Workspace extends PagedView
 
     private GestureDetector mGestureListener;
     private boolean mSwipeDown;
+    private boolean mDoubleTap;
 
     /**
      * Used to inflate the Workspace from XML.
@@ -366,12 +369,24 @@ public class Workspace extends PagedView
         // Disable multitouch across the workspace/all apps/customize tray
         setMotionEventSplittingEnabled(true);
 
+        final PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         final StatusBarManager statusBar = (StatusBarManager) context.getSystemService(
                 Context.STATUS_BAR_SERVICE);
+        context.enforceCallingOrSelfPermission(
+                    android.Manifest.permission.DEVICE_POWER, null);
         context.enforceCallingOrSelfPermission(
                     android.Manifest.permission.EXPAND_STATUS_BAR, null);
         mGestureListener =
                 new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onDoubleTap(MotionEvent event) {
+                mDoubleTap = Utilities.getPrefs(mLauncher.getApplicationContext()).getBoolean(KEY_DOUBLE_TAP, true);
+                if (mDoubleTap) {
+                    pm.goToSleep(event.getEventTime());
+                }
+                return true;
+            }
+
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2,
                     float velocityX, float velocityY) {
