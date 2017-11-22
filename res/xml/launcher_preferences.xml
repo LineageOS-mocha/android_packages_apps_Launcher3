@@ -51,4 +51,11 @@
             android:persistent="true"
     />
 
+    <SwitchPreference
+            android:key="pref_SwipeDown"
+            android:title="@string/swipe_down_title"
+            android:defaultValue="true"
+            android:persistent="true"
+    />
+
 </PreferenceScreen>
