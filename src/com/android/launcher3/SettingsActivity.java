@@ -17,8 +17,14 @@
 package com.android.launcher3;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.app.ActionBar;
 import android.content.ContentResolver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,12 +32,21 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.provider.Settings;
 import android.provider.Settings.System;
+import android.util.Pair;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.NumberPicker;
 
 /**
  * Settings activity for Launcher. Currently implements the following setting: Allow rotation
  */
 public class SettingsActivity extends Activity {
+
+    // Grid size
+    private static final String KEY_GRID_SIZE = "pref_grid_size";
+    private static final String KEY_GRID_CUSTOM = "pref_grid_custom";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,9 +61,14 @@ public class SettingsActivity extends Activity {
     /**
      * This fragment shows the launcher preferences.
      */
-    public static class LauncherSettingsFragment extends PreferenceFragment {
+    public static class LauncherSettingsFragment extends PreferenceFragment 
+            implements SharedPreferences.OnSharedPreferenceChangeListener {
 
         private SystemDisplayRotationLockObserver mRotationLockObserver;
+
+        private SharedPreferences mPrefs;
+
+        private boolean mShouldRestart = false;;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -75,6 +95,9 @@ public class SettingsActivity extends Activity {
                 mRotationLockObserver.onChange(true);
                 rotationPref.setDefaultValue(Utilities.getAllowRotationDefaultValue(getActivity()));
             }
+
+            mPrefs = Utilities.getPrefs(getActivity().getApplicationContext());
+            mPrefs.registerOnSharedPreferenceChangeListener(this);
         }
 
         @Override
@@ -83,7 +106,71 @@ public class SettingsActivity extends Activity {
                 getActivity().getContentResolver().unregisterContentObserver(mRotationLockObserver);
                 mRotationLockObserver = null;
             }
+            mPrefs.unregisterOnSharedPreferenceChangeListener(this);
+
+            if (mShouldRestart) {
+                triggerRestart();
+            }
             super.onDestroy();
+        }
+
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+            if (KEY_GRID_SIZE.equals(key)) {
+                mShouldRestart = true;
+                if ("custom".equals(prefs.getString(KEY_GRID_SIZE, "default") )) {
+                    setCustomGridSize();
+                }
+            }
+        }
+
+        private void setCustomGridSize() {
+            int minValue = 3;
+            int maxValue = 9;
+
+            String storedValue = mPrefs.getString(KEY_GRID_CUSTOM, "5x5");
+            Pair<Integer, Integer> currentValues = Utilities.extractCustomGrid(storedValue);
+
+            LayoutInflater inflater = (LayoutInflater)
+                    getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            if (inflater == null) {
+                return;
+            }
+            View contentView = inflater.inflate(R.layout.dialog_custom_grid, null);
+            NumberPicker columnPicker = (NumberPicker)
+                    contentView.findViewById(R.id.dialog_grid_column);
+            NumberPicker rowPicker = (NumberPicker)
+                    contentView.findViewById(R.id.dialog_grid_row);
+
+            columnPicker.setMinValue(minValue);
+            rowPicker.setMinValue(minValue);
+            columnPicker.setMaxValue(maxValue);
+            rowPicker.setMaxValue(maxValue);
+            columnPicker.setValue(currentValues.first);
+            rowPicker.setValue(currentValues.second);
+
+            new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.grid_size_text)
+                    .setMessage(R.string.grid_size_custom_message)
+                    .setView(contentView)
+                    .setOnDismissListener(dialog -> {
+                        String newValues = Utilities.getCustomGridValue(columnPicker.getValue(),
+                                rowPicker.getValue());
+                        mPrefs.edit().putString(KEY_GRID_CUSTOM, newValues).apply();
+                    })
+                    .show();
+        }
+
+        private void triggerRestart() {
+            Context context = getActivity().getApplicationContext();
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            PendingIntent pi = PendingIntent.getActivity(context, 41, intent,
+                    PendingIntent.FLAG_CANCEL_CURRENT);
+            AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            manager.set(AlarmManager.RTC, java.lang.System.currentTimeMillis() + 1, pi);
+            java.lang.System.exit(0);
         }
     }
 

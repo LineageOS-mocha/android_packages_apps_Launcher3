@@ -26,4 +26,13 @@
     <string name="transparent_hotseat_title">Transparent Hotseat</string>
     <string name="swipe_down_title">Swipe down to expand quick settings</string>
     <string name="double_tap_title">Double tap to sleep</string>
+
+    <!-- Grid size -->
+    <string name="grid_size_text">Grid size</string>
+    <string name="grid_size_default">Default (5x5)</string>
+    <string name="grid_size_comfortable">Comfortable (4x5)</string>
+    <string name="grid_size_cozy">Cozy (5x5)</string>
+    <string name="grid_size_condensed">Condensed (6x6)</string>
+    <string name="grid_size_custom">Custom</string>
+    <string name="grid_size_custom_message">Select the columns and rows count</string>
 </resources>

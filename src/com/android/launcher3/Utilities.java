@@ -150,6 +150,9 @@ public final class Utilities {
     public static final String ALLOW_ROTATION_PREFERENCE_KEY = "pref_allowRotation";
     public static final String SHOW_SEARCH_BAR_PREFERENCE_KEY = "pref_searchBar";
 
+    private static final String GRID_VALUE_SEPARATOR = "x";
+    private static final int GRID_VALUE_DEFAULT = 5;
+
     public static boolean isPropertyEnabled(String propertyName) {
         return Log.isLoggable(propertyName, Log.VERBOSE);
     }
@@ -923,5 +926,30 @@ public final class Utilities {
             event.getText().add(text);
             accessibilityManager.sendAccessibilityEvent(event);
         }
+    }
+
+    public static Pair<Integer, Integer> extractCustomGrid(String value) {
+        int columns = GRID_VALUE_DEFAULT;
+        int rows = GRID_VALUE_DEFAULT;
+        String[] values = value.split(GRID_VALUE_SEPARATOR);
+
+        if (values.length == 2) {
+            try {
+                columns = Integer.parseInt(values[0]);
+                rows = Integer.parseInt(values[1]);
+            } catch (NumberFormatException e) {
+                // Ignore and fallback to default
+                columns = GRID_VALUE_DEFAULT;
+                rows = GRID_VALUE_DEFAULT;
+            }
+        }
+
+        return new Pair<>(columns, rows);
+
+    }
+
+    public static String getCustomGridValue(int columns, int rows) {
+        return String.format(Locale.ENGLISH, "%1%d%2$s%3$d", columns,
+                GRID_VALUE_SEPARATOR, rows);
     }
 }
