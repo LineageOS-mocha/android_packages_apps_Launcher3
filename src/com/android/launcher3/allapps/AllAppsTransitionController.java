@@ -84,7 +84,6 @@ public class AllAppsTransitionController implements TouchController, VerticalPul
 
     private static final float RECATCH_REJECTION_FRACTION = .0875f;
 
-    private int mBezelSwipeUpHeight;
     private long mAnimationDuration;
 
     private AnimatorSet mCurrentAnimation;
@@ -100,8 +99,6 @@ public class AllAppsTransitionController implements TouchController, VerticalPul
         mDetector.setListener(this);
         mShiftRange = DEFAULT_SHIFT_RANGE;
         mProgress = 1f;
-        mBezelSwipeUpHeight = l.getResources().getDimensionPixelSize(
-                R.dimen.all_apps_bezel_swipe_height);
 
         mEvaluator = new ArgbEvaluator();
         mAllAppsBackgroundColor = ContextCompat.getColor(l, R.color.all_apps_container_color);
@@ -115,8 +112,6 @@ public class AllAppsTransitionController implements TouchController, VerticalPul
                 mNoIntercept = true;
             } else if (mLauncher.isAllAppsVisible() &&
                     !mAppsView.shouldContainerScroll(ev)) {
-                mNoIntercept = true;
-            } else if (!mLauncher.isAllAppsVisible() && !shouldPossiblyIntercept(ev)) {
                 mNoIntercept = true;
             } else {
                 // Now figure out which direction scroll events the controller will start
@@ -152,25 +147,6 @@ public class AllAppsTransitionController implements TouchController, VerticalPul
             return false;
         }
         return mDetector.isDraggingOrSettling();
-    }
-
-    private boolean shouldPossiblyIntercept(MotionEvent ev) {
-        DeviceProfile grid = mLauncher.getDeviceProfile();
-        if (mDetector.isIdleState()) {
-            if (grid.isVerticalBarLayout()) {
-                if (ev.getY() > mLauncher.getDeviceProfile().heightPx - mBezelSwipeUpHeight) {
-                    return true;
-                }
-            } else {
-                if (mLauncher.getDragLayer().isEventOverHotseat(ev) ||
-                        mLauncher.getDragLayer().isEventOverPageIndicator(ev)) {
-                    return true;
-                }
-            }
-            return false;
-        } else {
-            return true;
-        }
     }
 
     @Override

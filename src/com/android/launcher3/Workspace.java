@@ -388,12 +388,10 @@ public class Workspace extends PagedView
             }
 
             @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2,
-                    float velocityX, float velocityY) {
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                final Boolean isDownDirection = e1.getY() < e2.getY();
                 mSwipeDown = Utilities.getPrefs(mLauncher.getApplicationContext()).getBoolean(KEY_SWIPE_DOWN, true);
-                if (e1.getY() - e2.getY() > SWIPE_THRESHOLD) {
-                    mLauncher.showAppsView(true, false, false);
-                } else if (mSwipeDown && (e1.getY() - e2.getY() < SWIPE_THRESHOLD)) {
+                if (mSwipeDown && isDownDirection && (e1.getY() - e2.getY() < SWIPE_THRESHOLD)) {
                     statusBar.expandNotificationsPanel();
                 }
                 return true;
